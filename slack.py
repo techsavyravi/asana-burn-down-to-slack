@@ -45,7 +45,7 @@ def send2Slack(welcome, body):
 def send2SlackCustomURL(welcome, body, url):
     config = configparser.ConfigParser()
     config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
-
+    url = url.replace(" ", "")
     jsonPayload = {
         "blocks": [
             {
