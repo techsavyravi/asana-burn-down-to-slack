@@ -29,6 +29,6 @@ def upload_to_aws(local_file, s3_file):
     except FileNotFoundError:
         print("The file was not found")
         return False
-    except NoCredentialsError:
-        print("Credentials not available")
-        return False
+    # except NoCredentialsError:
+    #     print("Credentials not available")
+    #     return False
