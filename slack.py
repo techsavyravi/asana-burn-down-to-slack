@@ -42,6 +42,44 @@ def send2Slack(welcome, body):
     response = requests.request("POST", url, headers=headers, data=payload)
     print(response.text.encode('utf8'))
 
+def send2SlackCustomURL(welcome, body, url):
+    config = configparser.ConfigParser()
+    config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
+
+    jsonPayload = {
+        "blocks": [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "Hi Team :wave:"
+                }
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": welcome
+                }
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": body
+                }
+            }
+        ]
+    }
+    payload = json.dumps(jsonPayload)
+    headers = {
+        'Content-type': 'application/json',
+        'Content-Type': 'text/plain'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.text.encode('utf8'))
+
 
 def send2SlackWithImage(welcome, body, imageUrl):
     config = configparser.ConfigParser()
