@@ -13,6 +13,7 @@ import sys
 import pytz
 from utils import upload_to_aws
 from slack import send2SlackWithImage
+import os
 
 
 utc = pytz.UTC
@@ -57,6 +58,10 @@ pendingStoryPoints = 0
 df = pd.DataFrame(columns=['Day', 'Pending', 'Completed'])
 
 i = 0
+
+totalStoryPointAtTheStartofTheSprint = 0
+totalStoryPointTillNow = 0
+
 for day in sprint_days:
     if day > datetime.datetime.today():
         break
@@ -68,12 +73,17 @@ for day in sprint_days:
                     totalStoryPoint += int(field['enum_value']['name'])
         if task['completed']:
             taskcompletedate = dateutil.parser.parse(task['completed_at'])
-            if taskcompletedate <= utc.localize(day):
+            nextdaystart = day+datetime.timedelta(days=1)
+            if taskcompletedate <= utc.localize(nextdaystart):
                 for field in task['custom_fields']:
                     if field['name'] == 'Story Points':
                         completedStoryPoints += int(
                             field['enum_value']['name'])
 
+    if(i == 1):
+        totalStoryPointAtTheStartofTheSprint = totalStoryPoint
+    totalStoryPointTillNow = totalStoryPoint
+    print(completedStoryPoints)
     pendingStoryPoints = totalStoryPoint - completedStoryPoints
     i = i+1
     df.loc[i] = [day.strftime("%a, %d %b"),
@@ -83,7 +93,14 @@ for day in sprint_days:
     totalStoryPoint = 0
     completedStoryPoints = 0
 
+scopeCreepTillNow = ((totalStoryPointTillNow -
+                      totalStoryPointAtTheStartofTheSprint)/totalStoryPointAtTheStartofTheSprint)*100
+
+# df = df[:-1] # this deletes the last day from the pandas dataframe
 print(df)
+
+print(totalStoryPointAtTheStartofTheSprint,
+      totalStoryPointTillNow, scopeCreepTillNow)
 
 filename = datetime.datetime.today().strftime("%Y-%m-%d.png")
 print(filename)
@@ -106,11 +123,24 @@ for i, label in enumerate(list(df.index)):
 fig = stackedPlot.get_figure()
 fig.savefig(filename, bbox_inches="tight")
 
-isUploaded = upload_to_aws(filename, filename)
+isUploaded = upload_to_aws(filename, "pre-somethings-" + filename)
+os.remove(filename)
 
 if(isUploaded != False):
-    welcome = "*Here is today's Burn Down Chart.*"
-    finalMessage = "This burn down chart shows *pending tasks in blue* and *completed task in orange*. The numbers written on *top* of each bar are *total story points* for that particular day. The number written after near the *blue bar's top edge* is the *pending story points*. The blue bar should continuously keep getting low and low (i.e. burning down) everyday and *eventually burn down to 0* towards the end of the sprint.\n\nPlease ensure that you keep your tasks up to date in asana to ensure an accurate Burn Down Chart."
+    welcome = "*Here is todays's <https://en.wikipedia.org/wiki/Burn_down_chart|Burn Down Chart>.*"
+    finalMessage = "This burn down chart shows *pending tasks in blue* and *completed task in orange*. The numbers written on *top* of each bar are total *<https://www.mountaingoatsoftware.com/blog/what-are-story-points|story points>* in the sprint on that particular day. The number written near the *blue bar's top edge* is the *pending story points*. The blue bar should continuously keep getting low and low (i.e. burning down) everyday and *eventually burn down to 0* towards the end of the sprint.\n\nTech team ensures that we keep our tasks moving on the kanban board in asana to ensure an accurate Burn Down Chart. It's a start, any shortcomings and enhancements to this will be overcome in future sprint's burn downs. "
+    finalMessage += "\n\n*Scope Creep Till Today:* {0}%\n\n".format(
+        str(round(scopeCreepTillNow)))
+    addtofinal = ""
+    if(scopeCreepTillNow > 20):
+        addtofinal = "*[ALARMING] SCOPE CREEP IS ABOVE 20%. THIS MIGHT CAUSE SPILLOVERS*"
+    if(scopeCreepTillNow > 30):
+        addtofinal = "*[WARNING] SCOPE CREEP TOO HIGH. PLEASE DECIDE SPRINT JUDICIOUSLY*"
+    if(scopeCreepTillNow > 50):
+        addtofinal = "*[WARNING] SCOPE CREEP IS TOO HIGH.*"
+
+    finalMessage += addtofinal
+
     send2SlackWithImage(welcome, finalMessage, isUploaded)
 
 # plt.show(block=True)
@@ -152,4 +182,3 @@ if(isUploaded != False):
 # mydict = { "timestamp": datetime.datetime.now(), "totalStoryPoints" : totalStoryPoints, "incompleteStoryPoints": incompleteStoryPoints, "completedStoryPoints": completedStoryPoints, "scopeCreepStoryPoints": scopeCreepStoryPoints }
 
 # x = mycol.insert_one(mydict)
-
