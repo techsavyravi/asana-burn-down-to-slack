@@ -20,7 +20,7 @@ utc = pytz.UTC
 
 
 config = configparser.ConfigParser()
-config.read('settings.ini')
+config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
 
 mongo_url = config['MONGO']['url']
 url = "https://app.asana.com/api/1.0/projects/{0}".format(

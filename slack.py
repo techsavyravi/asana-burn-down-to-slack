@@ -1,11 +1,11 @@
 import requests
 import json
 import configparser
-
+import os
 
 def send2Slack(welcome, body):
     config = configparser.ConfigParser()
-    config.read('settings.ini')
+    config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
     url = config['SLACK']['url']
 
     jsonPayload = {
@@ -45,7 +45,7 @@ def send2Slack(welcome, body):
 
 def send2SlackWithImage(welcome, body, imageUrl):
     config = configparser.ConfigParser()
-    config.read('settings.ini')
+    config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
     url = config['SLACK']['url']
 
     jsonPayload = {

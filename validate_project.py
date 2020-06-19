@@ -2,10 +2,11 @@ import requests
 import json
 from slack import send2Slack
 import configparser
+import os
 
 def isProjectValid(informSlack=False):
     config = configparser.ConfigParser()
-    config.read('settings.ini')
+    config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
 
     url = "https://app.asana.com/api/1.0/projects/{0}/tasks?opt_pretty&opt_expand=(this%7Csubtasks%2B)".format(
         config['ASANA']['project_id'])

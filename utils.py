@@ -2,8 +2,9 @@
 import boto3
 from botocore.exceptions import NoCredentialsError
 import configparser
+import os
 config = configparser.ConfigParser()
-config.read('settings.ini')
+config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
 
 ACCESS_KEY = config['AWS']['ACCESS_KEY']
 SECRET_KEY = config['AWS']['SECRET_KEY']
