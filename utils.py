@@ -19,7 +19,9 @@ def upload_to_aws(local_file, s3_file):
                        ExtraArgs={'ACL': 'public-read'})
         print("Upload Successful")
         bucket_location = boto3.client(
-            's3').get_bucket_location(Bucket=BUCKET_NAME)
+            's3').get_bucket_location(Bucket=BUCKET_NAME,
+                                      aws_access_key_id=ACCESS_KEY,
+                                      aws_secret_access_key=SECRET_KEY)
         object_url = "https://s3-{0}.amazonaws.com/{1}/{2}".format(
             bucket_location['LocationConstraint'],
             BUCKET_NAME,
