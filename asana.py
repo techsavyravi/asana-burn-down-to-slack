@@ -14,6 +14,7 @@ import pytz
 from utils import upload_to_aws
 from slack import send2SlackWithImage
 import os
+from random import randint
 
 
 utc = pytz.UTC
@@ -93,8 +94,11 @@ for day in sprint_days:
     totalStoryPoint = 0
     completedStoryPoints = 0
 
-scopeCreepTillNow = ((totalStoryPointTillNow -
-                      totalStoryPointAtTheStartofTheSprint)/totalStoryPointAtTheStartofTheSprint)*100
+try:
+    scopeCreepTillNow = ((totalStoryPointTillNow -
+                          totalStoryPointAtTheStartofTheSprint)/totalStoryPointAtTheStartofTheSprint)*100
+except:
+    scopeCreepTillNow = 0
 
 # df = df[:-1] # this deletes the last day from the pandas dataframe
 print(df)
@@ -103,7 +107,6 @@ print(totalStoryPointAtTheStartofTheSprint,
       totalStoryPointTillNow, scopeCreepTillNow)
 
 filename = datetime.datetime.today().strftime("%Y-%m-%d.png")
-print(filename)
 
 x = df[['Day', 'Pending', 'Completed']]
 y = x.set_index('Day')
@@ -123,8 +126,10 @@ for i, label in enumerate(list(df.index)):
 fig = stackedPlot.get_figure()
 fig.savefig(filename, bbox_inches="tight")
 
-isUploaded = upload_to_aws(filename, "pre-somethings-" + filename)
+randstring = str(randint(10000, 99999)) + "-"
+isUploaded = upload_to_aws(filename, randstring + filename)
 os.remove(filename)
+print(filename, randstring + filename)
 
 if(isUploaded != False):
     welcome = "*Here is todays's <https://en.wikipedia.org/wiki/Burn_down_chart|Burn Down Chart>.*"

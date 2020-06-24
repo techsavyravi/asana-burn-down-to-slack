@@ -4,6 +4,7 @@ from slack import send2Slack
 import configparser
 import os
 
+
 def isProjectValid(informSlack=False):
     config = configparser.ConfigParser()
     config.read(os.path.dirname(os.path.realpath(__file__)) + '/settings.ini')
@@ -49,7 +50,7 @@ def isProjectValid(informSlack=False):
         finalMessage = strypointmissing + assigneemissing + \
             "\n *I'll check again in an hour. Let's fix it by then.*"
         send2Slack(welcome, finalMessage)
-    
+
     if(isValid):
         return y
     else:
