@@ -68,7 +68,8 @@ for day in sprint_days:
         break
     for task in y['data']:
         taskcreatedate = dateutil.parser.parse(task['created_at'])
-        if taskcreatedate <= utc.localize(day):
+        nextdaystart = day+datetime.timedelta(days=1)
+        if taskcreatedate <= utc.localize(nextdaystart):
             for field in task['custom_fields']:
                 if field['name'] == 'Story Points':
                     totalStoryPoint += int(field['enum_value']['name'])
@@ -81,10 +82,9 @@ for day in sprint_days:
                         completedStoryPoints += int(
                             field['enum_value']['name'])
 
-    if(i == 1):
+    if(i == 0):
         totalStoryPointAtTheStartofTheSprint = totalStoryPoint
     totalStoryPointTillNow = totalStoryPoint
-    print(completedStoryPoints)
     pendingStoryPoints = totalStoryPoint - completedStoryPoints
     i = i+1
     df.loc[i] = [day.strftime("%a, %d %b"),
