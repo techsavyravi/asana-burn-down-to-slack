@@ -2,9 +2,11 @@ import os
 from pymongo import MongoClient
 from datetime import datetime, date, timedelta
 import pandas as pd
+from drawChart import plot_stacked_bar
+import matplotlib.pyplot as plt
 
 MONGO_URL = os.getenv('MONGO_URL')
-# MONGO_DRS_URL = os.getenv('MONGO_DRS_URL')
+MONGO_DRS_URL = os.getenv('MONGO_DRS_URL')
 
 
 clientRead = MongoClient(MONGO_URL)
@@ -21,6 +23,10 @@ end = datetime(2021, 1, 8, 0, 0, 0)
 # for data in mydata:
 #     print(data)
 
+referralCounts = []
+newUserCounts = []
+category_labels = []
+
 for i in range(0, 20):
     s = date.today()-timedelta(days=i)
     e = date.today()-timedelta(days=i-1)
@@ -35,7 +41,39 @@ for i in range(0, 20):
             referralUsers += 1
 
     totalSignups = len(mydata)
+    date_time = start.strftime("%d-%m")
 
-    print(totalSignups, referralUsers)
-
+    referralCounts.append(referralUsers)
+    newUserCounts.append(totalSignups-referralUsers)
+    category_labels.append(date_time)
     print("*****")
+
+# referralCounts.reverse()
+# newUserCounts.reverse()
+# category_labels.reverse()
+
+# print(referralCounts, newUserCounts)
+
+# plt.figure(figsize=(6, 20))
+
+# series_labels = ['Series 1', 'Series 2']
+
+# data = [
+#     newUserCounts,
+#     referralCounts
+# ]
+
+# # category_labels = ['Cat A', 'Cat B', 'Cat C', 'Cat D']
+
+# plot_stacked_bar(
+#     data, 
+#     series_labels, 
+#     category_labels=category_labels, 
+#     show_values=True, 
+#     value_format="{:.1f}",
+#     colors=['tab:orange', 'tab:green'],
+#     y_label="New Users"
+# )
+
+# plt.savefig('bar.png')
+# plt.show()
