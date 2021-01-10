@@ -61,3 +61,37 @@ def plot_stacked_bar(data, series_labels, category_labels=None,
                 plt.text(bar.get_x() + w/2, bar.get_y() + h/2, 
                          value_format.format(h), ha="center", 
                          va="center")
+
+
+# BELOW CODE TO BE USED WHEN ABOVE FUNCTION IS CALLED
+# print("*****")
+
+# referralCounts.reverse()
+# newUserCounts.reverse()
+# category_labels.reverse()
+
+# print(referralCounts, newUserCounts)
+
+# plt.figure(figsize=(6, 20))
+
+# series_labels = ['Series 1', 'Series 2']
+
+# data = [
+#     newUserCounts,
+#     referralCounts
+# ]
+
+# # category_labels = ['Cat A', 'Cat B', 'Cat C', 'Cat D']
+
+# plot_stacked_bar(
+#     data, 
+#     series_labels, 
+#     category_labels=category_labels, 
+#     show_values=True, 
+#     value_format="{:.1f}",
+#     colors=['tab:orange', 'tab:green'],
+#     y_label="New Users"
+# )
+
+# plt.savefig('bar.png')
+# plt.show()
