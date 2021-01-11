@@ -48,4 +48,4 @@ for i in range(startfrom, noofdaystodothisfor):
 
 sendString = "*Data for 10-01-2021*\n" + "*New Users (without ref):* " + str(BulkMongoDocs[0]['new_user_count']) + "\n*Referral Users:* " + str(BulkMongoDocs[0]['referral_count']) + "\n*Engagement Yesterday:* " + str(BulkMongoDocs[0]['engagement_count']) + "\n"
 # print(sendString)
-send2SlackCustomURL("Starting today, we'll have the last day stats here on this channel everyday at 8:00am. Let's get crunching.", sendString, "https://hooks.sla ck.com/services/TPMAJ1G13/B01HYE4E3KR/DJauxGYrzH292mlgtpRiBkIA")
+send2SlackCustomURL("Starting today, we'll have the last day's stats here on this channel everyday at 8:00am. Let's get crunching.", sendString, "https://hooks.sla ck.com/services/TPMAJ1G13/B01HYE4E3KR/DJauxGYrzH292mlgtpRiBkIA")
