@@ -5,6 +5,7 @@ import pandas as pd
 from drawChart import plot_stacked_bar
 import matplotlib.pyplot as plt
 from get_engagement import getEngagement
+from slack import send2SlackCustomURL
 
 MONGO_URL = os.getenv('MONGO_URL')
 MONGO_DRS_URL = os.getenv('MONGO_DRS_URL')
@@ -14,13 +15,12 @@ clientRead = MongoClient(MONGO_URL)
 
 db = clientRead.iDreamCareer
 
-noofdaystodothisfor = 20
-referralCounts = []
-newUserCounts = []
-category_labels = []
 BulkMongoDocs = []
 
-for i in range(0, noofdaystodothisfor):
+startfrom = 1
+noofdaystodothisfor = startfrom + 1
+
+for i in range(startfrom, noofdaystodothisfor):
     s = date.today()-timedelta(days=i)
     e = date.today()-timedelta(days=i-1)
     start = datetime(s.year, s.month, s.day, 0, 0, 0)
@@ -35,11 +35,7 @@ for i in range(0, noofdaystodothisfor):
             referralUsers += 1
 
     totalSignups = len(mydata)
-    date_time = start.strftime("%d-%m")
-
-    referralCounts.append(referralUsers)
-    newUserCounts.append(totalSignups-referralUsers)
-    category_labels.append(date_time)
+   
     mongoDoc = {
         "day": start.day,
         "month": start.month,
@@ -48,5 +44,8 @@ for i in range(0, noofdaystodothisfor):
         "new_user_count": totalSignups-referralUsers,
         "engagement_count": myEngData,
     }
-    print(mongoDoc)
     BulkMongoDocs.append(mongoDoc)
+
+sendString = "*Data for 10-01-2021*\n" + "*New Users (without ref):* " + str(BulkMongoDocs[0]['new_user_count']) + "\n*Referral Users:* " + str(BulkMongoDocs[0]['referral_count']) + "\n*Engagement Yesterday:* " + str(BulkMongoDocs[0]['engagement_count']) + "\n"
+# print(sendString)
+send2SlackCustomURL("Starting today, we'll have the last day stats here on this channel everyday at 8:00am. Let's get crunching.", sendString, "https://hooks.sla ck.com/services/TPMAJ1G13/B01HYE4E3KR/DJauxGYrzH292mlgtpRiBkIA")

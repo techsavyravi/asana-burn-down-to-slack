@@ -38,4 +38,4 @@ def getEngagement(start, end, db):
     ]
 
     mydata = list(db.events.aggregate(pipeline))
-    return mydata[0]['totalRepeatLogin']
+    return mydata[0]['totalRepeatLogin'] if len(mydata) > 0 else 0
