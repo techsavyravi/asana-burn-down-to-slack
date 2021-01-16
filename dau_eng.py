@@ -28,7 +28,7 @@ for i in range(startfrom, noofdaystodothisfor):
     # print(start)
     # print(end)
     mydata = list(db.users.find({"createdAt": {"$gte": start, "$lt": end}}))
-    myEngData = getEngagement(start, end, db)
+    myEngData = getEngagement(start, end, db, mydata)
     referralUsers = 0
     for data in mydata:
         if("referred_by" in data):
@@ -46,6 +46,7 @@ for i in range(startfrom, noofdaystodothisfor):
     }
     BulkMongoDocs.append(mongoDoc)
 DAU = BulkMongoDocs[0]['new_user_count'] + BulkMongoDocs[0]['referral_count'] + BulkMongoDocs[0]['engagement_count']
-sendString = "*New Users (without ref):* " + str(BulkMongoDocs[0]['new_user_count']) + "\n*Referral Users:* " + str(BulkMongoDocs[0]['referral_count']) + "\n*Engagement Yesterday:* " + str(BulkMongoDocs[0]['engagement_count']) + "\n\n*DAU:* " + str(DAU)
+sendString = "*New Users (without ref):* " + str(BulkMongoDocs[0]['new_user_count']) + "\n*Referral Users:* " + str(BulkMongoDocs[0]['referral_count']) + "\n*Returning User:* " + str(BulkMongoDocs[0]['engagement_count']) + "\n\n*DAU:* " + str(DAU)
 # print(sendString)
 send2SlackCustomURL("Stats for yesterday (11-01-2021). Let's get crunching.", sendString, "https://hooks.sla ck.com/services/TPMAJ1G13/B01HYE4E3KR/DJauxGYrzH292mlgtpRiBkIA")
+# print(sendString)
