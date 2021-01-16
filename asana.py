@@ -82,7 +82,7 @@ for day in sprint_days:
                         completedStoryPoints += int(
                             field['enum_value']['name'])
 
-    if(i == 0):
+    if(i == 1):
         totalStoryPointAtTheStartofTheSprint = totalStoryPoint
     totalStoryPointTillNow = totalStoryPoint
     pendingStoryPoints = totalStoryPoint - completedStoryPoints
