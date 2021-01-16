@@ -48,5 +48,6 @@ for i in range(startfrom, noofdaystodothisfor):
 DAU = BulkMongoDocs[0]['new_user_count'] + BulkMongoDocs[0]['referral_count'] + BulkMongoDocs[0]['engagement_count']
 sendString = "*New Users (without ref):* " + str(BulkMongoDocs[0]['new_user_count']) + "\n*Referral Users:* " + str(BulkMongoDocs[0]['referral_count']) + "\n*Returning User:* " + str(BulkMongoDocs[0]['engagement_count']) + "\n\n*DAU:* " + str(DAU)
 # print(sendString)
-send2SlackCustomURL("Stats for yesterday (" + start.strftime("%d-%m-%Y") + "). Let's get crunching.", sendString, "https://hooks.sla ck.com/services/TPMAJ1G13/B01HYE4E3KR/DJauxGYrzH292mlgtpRiBkIA")
+yesterday = date.today()-timedelta(days=1)
+send2SlackCustomURL("Stats for yesterday (" + yesterday.strftime("%d-%m-%Y") + "). Let's get crunching.", sendString, "https://hooks.sla ck.com/services/TPMAJ1G13/B01HYE4E3KR/DJauxGYrzH292mlgtpRiBkIA")
 # print(sendString)
