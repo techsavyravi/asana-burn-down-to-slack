@@ -19,8 +19,8 @@ dbDRS = clientDRS.reports
 
 BulkMongoDocs = []
 
-startfrom = 35
-noofdaystodothisfor = startfrom + 5
+startfrom = 1
+noofdaystodothisfor = startfrom + 1
 
 for i in range(startfrom, noofdaystodothisfor):
     s = date.today()-timedelta(days=i)
