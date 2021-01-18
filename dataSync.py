@@ -1,3 +1,4 @@
+from ScrollDepth import getScrollDepth
 import os
 from pymongo import MongoClient
 from datetime import datetime, date, timedelta
@@ -30,6 +31,7 @@ def DAU():
         # print(end)
         mydata = list(db.users.find({"createdAt": {"$gte": start, "$lt": end}}))
         myEngData = getEngagement(start, end, db, mydata)
+        scollDepth = getScrollDepth(start, end, db)
         referralUsers = 0
         for data in mydata:
             if("referred_by" in data):
@@ -45,6 +47,9 @@ def DAU():
             "new_user_count": totalSignups-referralUsers,
             "engagement_count": myEngData,
         }
+        mongoDoc.update(scollDepth)
+        print(mongoDoc)
+
         BulkMongoDocs.append(mongoDoc)
         collection=dbDRS.dau
         collection.replace_one({
