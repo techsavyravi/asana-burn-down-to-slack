@@ -10,7 +10,7 @@ from slack import send2SlackCustomURL
 MONGO_URL = os.getenv('MONGO_URL')
 MONGO_DRS_URL = os.getenv('MONGO_DRS_URL')
 
-def DAU():
+def DAU(startitfrom = 0, till = 1):
     clientRead = MongoClient(MONGO_URL)
     clientDRS = MongoClient(MONGO_DRS_URL)
 
@@ -19,8 +19,8 @@ def DAU():
 
     BulkMongoDocs = []
 
-    startfrom = 0
-    noofdaystodothisfor = startfrom + 1
+    startfrom = startitfrom
+    noofdaystodothisfor = startfrom + till
 
     for i in range(startfrom, noofdaystodothisfor):
         s = date.today()-timedelta(days=i)
@@ -33,12 +33,14 @@ def DAU():
         myEngData = getEngagement(start, end, db, mydata)
         scollDepth = getScrollDepth(start, end, db)
         referralUsers = 0
+        phoneNumbers=[]
         for data in mydata:
+            # print(str(data['_id']))
             if("referred_by" in data):
                 referralUsers += 1
 
         totalSignups = len(mydata)
-    
+        print(phoneNumbers)
         mongoDoc = {
             "day": start.day,
             "month": start.month,
