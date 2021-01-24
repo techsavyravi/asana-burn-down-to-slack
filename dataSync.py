@@ -48,6 +48,7 @@ def DAU(startitfrom = 0, till = 1):
             "referral_count": referralUsers,
             "new_user_count": totalSignups-referralUsers,
             "engagement_count": myEngData,
+            "timestamp": start
         }
         mongoDoc.update(scollDepth)
         print(mongoDoc)
