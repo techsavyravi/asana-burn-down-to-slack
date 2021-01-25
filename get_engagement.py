@@ -8,8 +8,8 @@ def getEngagement(start, end, db, mydata):
     for data in mydata:
         myIDs.append(str(data['_id']))
 
-    with open("z_newuser.txt", "w") as outfile:
-        outfile.write("\n".join(myIDs))
+    # with open("z_newuser.txt", "w") as outfile:
+    #     outfile.write("\n".join(myIDs))
 
     query = {
         "user_id": {
@@ -46,8 +46,8 @@ def getEngagement(start, end, db, mydata):
     for data in myNumbers:
         phoneNumbers.append(data["_id"])
         # print(data['_id'])
-    with open("z_returninguser.txt", "w") as outfile:
-        outfile.write("\n".join(phoneNumbers))
+    # with open("z_returninguser.txt", "w") as outfile:
+    #     outfile.write("\n".join(phoneNumbers))
     # print("******")
     # return mydata[0]['totalRepeatLogin'] if len(mydata) > 0 else 0
     return len(phoneNumbers)

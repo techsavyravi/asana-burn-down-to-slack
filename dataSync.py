@@ -1,3 +1,4 @@
+from getCCES import getCCES
 from ScrollDepth import getScrollDepth
 import os
 from pymongo import MongoClient
@@ -6,6 +7,7 @@ import pandas as pd
 from drawChart import plot_stacked_bar
 import matplotlib.pyplot as plt
 from get_engagement import getEngagement
+from getCCES import getCCES
 from slack import send2SlackCustomURL
 MONGO_URL = os.getenv('MONGO_URL')
 MONGO_DRS_URL = os.getenv('MONGO_DRS_URL')
@@ -32,6 +34,7 @@ def DAU(startitfrom = 0, till = 1):
         mydata = list(db.users.find({"createdAt": {"$gte": start, "$lt": end}}))
         myEngData = getEngagement(start, end, db, mydata)
         scollDepth = getScrollDepth(start, end, db)
+        dailyCCES = getCCES(start, end, db)
         referralUsers = 0
         phoneNumbers=[]
         for data in mydata:
@@ -48,6 +51,7 @@ def DAU(startitfrom = 0, till = 1):
             "referral_count": referralUsers,
             "new_user_count": totalSignups-referralUsers,
             "engagement_count": myEngData,
+            "clicks": dailyCCES,
             "timestamp": start
         }
         mongoDoc.update(scollDepth)

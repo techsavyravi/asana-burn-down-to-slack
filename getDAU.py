@@ -5,4 +5,4 @@ from bson.json_util import dumps
 
 MONGO_URL = os.getenv('MONGO_URL')
 
-DAU(1,2)
+DAU(45,3)
